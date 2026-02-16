@@ -2,348 +2,326 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Gửi bé Chinh 💝 - Happy New Year</title>
-<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Pacifico&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Happy New Year - Gửi Bé Chinh</title>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Pangolin&family=Playball&display=swap" rel="stylesheet">
 
 <style>
-    body {
-        margin: 0;
-        background: radial-gradient(circle at center, #1a0505 0%, #000000 100%);
-        overflow: hidden;
-        font-family: 'Dancing Script', cursive;
-        touch-action: manipulation; /* Tối ưu cảm ứng */
+    :root {
+        --primary-color: #ff0055;
+        --gold-color: #ffd700;
+        --scroll-bg: #a60000;
     }
 
-    /* Container chính */
-    #ui-layer {
+    body {
+        margin: 0;
+        background: radial-gradient(circle at center, #2e0000 0%, #000000 100%);
+        overflow: hidden;
+        font-family: 'Pangolin', sans-serif;
+        height: 100vh;
+        width: 100vw;
+    }
+
+    /* --- CANVAS NỀN --- */
+    canvas {
         position: absolute;
         top: 0;
         left: 0;
+        z-index: 1;
+    }
+
+    /* --- UI CONTAINER --- */
+    #ui-layer {
+        position: absolute;
         width: 100%;
         height: 100%;
-        pointer-events: none; /* Để click xuyên qua canvas */
         z-index: 10;
+        pointer-events: none; /* Để ko chặn click canvas */
         display: flex;
-        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 2vw; /* Khoảng cách 2 bên lề */
+        box-sizing: border-box;
+    }
+
+    /* --- CÂU ĐỐI (SCROLLS) --- */
+    .scroll-banner {
+        position: relative;
+        width: clamp(50px, 12vw, 90px); /* Responsive width */
+        height: clamp(300px, 70vh, 600px);
+        background: linear-gradient(to right, #800000, #b30000, #800000);
+        border: 2px solid var(--gold-color);
+        border-radius: 5px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        display: flex;
         justify-content: center;
         align-items: center;
+        opacity: 0; /* Ẩn ban đầu */
+        transform: scaleY(0); /* Hiệu ứng cuộn dọc */
+        transition: all 1.5s ease-in-out;
     }
 
-    /* Nút bấm ban đầu */
-    #startBtn {
-        pointer-events: auto;
-        padding: 15px 35px;
-        font-size: 22px;
-        background: linear-gradient(45deg, #ff0055, #ff99cc);
-        border: 2px solid #fff;
-        border-radius: 50px;
-        color: white;
-        cursor: pointer;
-        font-family: 'Pacifico', cursive;
-        box-shadow: 0 0 20px rgba(255, 0, 85, 0.5);
-        transition: all 0.3s;
-        animation: pulse 2s infinite;
+    /* Trục cuốn trên dưới của câu đối */
+    .scroll-banner::before, .scroll-banner::after {
+        content: '';
+        position: absolute;
+        width: 120%;
+        height: 25px;
+        background: linear-gradient(to right, #d4af37, #ffd700, #d4af37);
+        border-radius: 15px;
+        left: -10%;
+        box-shadow: 0 5px 10px rgba(0,0,0,0.5);
+    }
+    .scroll-banner::before { top: -15px; }
+    .scroll-banner::after { bottom: -15px; }
+
+    /* Nội dung câu đối */
+    .scroll-content {
+        writing-mode: vertical-rl; /* Viết dọc */
+        text-orientation: upright;
+        color: var(--gold-color);
+        font-family: 'Playball', cursive;
+        font-size: clamp(16px, 2.5vh, 28px);
+        letter-spacing: 5px;
+        text-shadow: 1px 1px 2px #000;
+        line-height: 1.5;
     }
 
-    #startBtn:active {
-        transform: scale(0.95);
-    }
-
-    /* Lời chúc chính giữa */
-    .message-box {
+    /* --- NỘI DUNG GIỮA TIM --- */
+    .center-message {
         position: absolute;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
         text-align: center;
+        z-index: 20;
         opacity: 0;
-        transition: opacity 2s ease-in-out;
-        width: 90%;
+        transition: opacity 2s ease;
+        width: 100%;
+        pointer-events: none;
     }
 
-    .main-text {
-        font-size: clamp(30px, 8vw, 60px); /* Tự chỉnh size theo màn hình */
-        color: #ff99cc;
-        text-shadow: 0 0 15px rgba(255, 0, 100, 0.8);
-        margin-bottom: 10px;
-    }
-
-    .sub-text {
-        font-size: clamp(18px, 5vw, 28px);
+    .main-name {
+        font-family: 'Great Vibes', cursive;
+        font-size: clamp(40px, 10vw, 90px);
         color: #fff;
-        font-weight: 300;
+        text-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--primary-color), 0 0 40px var(--primary-color);
+        margin: 0;
+        padding-bottom: 10px;
+        animation: glow 2s infinite alternate;
     }
 
-    /* Câu đối hai bên */
-    .couplet {
+    .sub-msg {
+        font-family: 'Pangolin', sans-serif;
+        color: #ffccd5;
+        font-size: clamp(14px, 4vw, 24px);
+        text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+        margin-top: -10px;
+    }
+
+    /* --- NÚT BẤM --- */
+    #startBtn {
         position: absolute;
-        top: 15%;
-        width: 50px;
-        padding: 20px 10px;
-        background: #b30000;
-        color: #ffeb3b; /* Màu vàng kim */
-        border: 2px solid #ffeb3b;
-        border-radius: 10px;
-        font-size: clamp(16px, 4vw, 24px);
-        text-align: center;
-        writing-mode: vertical-rl; /* Viết dọc */
-        text-orientation: upright;
-        box-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
-        opacity: 0;
-        transform: translateY(-50px);
-        transition: all 1.5s ease-out;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 15px 40px;
+        font-size: 20px;
+        background: var(--gold-color);
+        color: #a60000;
+        border: none;
+        border-radius: 50px;
+        font-weight: bold;
+        cursor: pointer;
+        z-index: 100;
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+        pointer-events: auto;
+        font-family: 'Pangolin', sans-serif;
     }
 
-    .couplet.left { left: 20px; }
-    .couplet.right { right: 20px; }
+    /* Animations */
+    @keyframes glow {
+        from { text-shadow: 0 0 10px #ff0055, 0 0 20px #ff0055; }
+        to { text-shadow: 0 0 20px #ff0055, 0 0 40px #ff0055, 0 0 60px #ff0055; }
+    }
 
-    /* Hiệu ứng hiển thị */
     .visible {
         opacity: 1 !important;
-        transform: translateY(0) !important;
-    }
-
-    canvas {
-        display: block;
-    }
-
-    @keyframes pulse {
-        0% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 0, 85, 0.5); }
-        50% { transform: scale(1.05); box-shadow: 0 0 40px rgba(255, 0, 85, 0.8); }
-        100% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 0, 85, 0.5); }
+        transform: scaleY(1) !important;
     }
 </style>
 </head>
 <body>
 
-<canvas id="canvas"></canvas>
+    <canvas id="canvas"></canvas>
 
-<div id="ui-layer">
-    <button id="startBtn" onclick="startShow()">💌 Mở quà Tết nhé!</button>
-    
-    <div class="couplet left" id="coupLeft">
-        Tết này vẫn giống tết xưa
-    </div>
-    <div class="couplet right" id="coupRight">
-        Vẫn chưa có vợ vẫn ưa Chinh nhiều
-    </div>
+    <button id="startBtn" onclick="initShow()">🎁 Mở Quà Tặng Bé Chinh</button>
 
-    <div class="message-box" id="msgBox">
-        <div class="main-text">Yêu Bé Chinh ❤️</div>
-        <div class="sub-text">Năm mới vui vẻ, mãi bên anh nhé!</div>
+    <div id="ui-layer">
+        <div class="scroll-banner" id="scrollLeft">
+            <div class="scroll-content">
+                Tết này vẫn giống Tết xưa
+            </div>
+        </div>
+
+        <div class="center-message" id="centerMsg">
+            <h1 class="main-name">Yêu Bé Chinh</h1>
+            <p class="sub-msg">Năm mới vui vẻ, mãi bên anh nhé ❤️</p>
+        </div>
+
+        <div class="scroll-banner" id="scrollRight">
+            <div class="scroll-content">
+                Vẫn chưa có vợ vẫn ưa Chinh nhiều
+            </div>
+        </div>
     </div>
-</div>
 
 <script>
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
-
-let width, height;
-let particles = [];
-let flowers = []; // Cánh hoa rơi
-let isHeartFormed = false;
-let heartScale = 15; // Tỉ lệ tim
-
-// Cấu hình số lượng
-const PARTICLE_COUNT = 400; // Số lượng tim nhỏ
-const FLOWER_COUNT = 30;    // Số lượng cánh hoa đào/mai
-
-function resize() {
-    width = window.innerWidth;
-    height = window.innerHeight;
-    canvas.width = width;
-    canvas.height = height;
-    // Điều chỉnh kích thước tim dựa trên màn hình
-    heartScale = Math.min(width, height) / 45;
-}
-resize();
-window.addEventListener('resize', resize);
-
-// --- HÀM TOÁN HỌC TRÁI TIM ---
-function getHeartPoint(t) {
-    // Công thức trái tim kinh điển
-    const x = 16 * Math.pow(Math.sin(t), 3);
-    const y = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
-    return { x, y };
-}
-
-// --- CLASS PARTICLES (Trái tim nhỏ) ---
-class Particle {
-    constructor(isHeartMode = false) {
-        this.reset();
-        if (isHeartMode) this.setHeartTarget();
-    }
-
-    reset() {
-        this.x = Math.random() * width;
-        this.y = Math.random() * height;
-        this.size = Math.random() * 2 + 1; // Kích thước ngẫu nhiên
-        this.opacity = Math.random() * 0.5 + 0.3;
-        
-        // Màu sắc: chủ yếu là hồng và đỏ
-        const colors = ["#ff0055", "#ff4d88", "#ff99cc", "#ff3366"];
-        this.color = colors[Math.floor(Math.random() * colors.length)];
-        
-        // Chế độ bay tự do
-        this.vx = (Math.random() - 0.5) * 1; 
-        this.vy = (Math.random() - 0.5) * 1;
-        
-        this.targetX = null;
-        this.targetY = null;
-        this.friction = 0.05; // Độ trượt khi về vị trí
-    }
-
-    setHeartTarget() {
-        // Chọn một điểm ngẫu nhiên trên đường cong trái tim
-        const t = Math.random() * Math.PI * 2;
-        const point = getHeartPoint(t);
-        
-        // Căn giữa màn hình và scale
-        // Thêm chút ngẫu nhiên (random) để tim trông đầy đặn hơn, không chỉ là đường viền
-        const shrink = Math.random() < 0.3 ? (Math.random() * 0.8) : 1; // 30% hạt nằm bên trong tim
-        
-        this.targetX = width / 2 + (point.x * heartScale * shrink);
-        this.targetY = height / 2 + (point.y * heartScale * shrink) - (heartScale * 2); // Dịch lên tí cho cân
-    }
-
-    update() {
-        if (isHeartFormed && this.targetX !== null) {
-            // DI CHUYỂN VỀ HÌNH TRÁI TIM
-            const dx = this.targetX - this.x;
-            const dy = this.targetY - this.y;
-            
-            this.x += dx * this.friction;
-            this.y += dy * this.friction;
-            
-            // Hiệu ứng rung nhẹ khi đã đứng yên
-            this.x += (Math.random() - 0.5) * 0.5;
-            this.y += (Math.random() - 0.5) * 0.5;
-        } else {
-            // DI CHUYỂN TỰ DO (Lúc chưa bấm nút hoặc background)
-            this.x += this.vx;
-            this.y += this.vy;
-
-            // Dội tường
-            if (this.x < 0 || this.x > width) this.vx *= -1;
-            if (this.y < 0 || this.y > height) this.vy *= -1;
-        }
-    }
-
-    draw() {
-        ctx.globalAlpha = this.opacity;
-        ctx.fillStyle = this.color;
-        
-        // Vẽ hình trái tim nhỏ thay vì hình tròn
-        ctx.beginPath();
-        // Một cách vẽ tim đơn giản trên canvas
-        let s = this.size;
-        ctx.moveTo(this.x, this.y);
-        ctx.bezierCurveTo(this.x - s, this.y - s, this.x - 2*s, this.y + s/2, this.x, this.y + 2*s);
-        ctx.bezierCurveTo(this.x + 2*s, this.y + s/2, this.x + s, this.y - s, this.x, this.y);
-        ctx.fill();
-        ctx.globalAlpha = 1;
-    }
-}
-
-// --- CLASS FLOWER (Cánh hoa rơi) ---
-class Flower {
-    constructor() {
-        this.reset();
-    }
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
     
-    reset() {
-        this.x = Math.random() * width;
-        this.y = -10; // Bắt đầu từ trên nóc
-        this.size = Math.random() * 5 + 3;
-        this.speed = Math.random() * 1.5 + 0.5;
-        this.angle = Math.random() * 360;
-        this.spin = (Math.random() - 0.5) * 0.1;
-        this.type = Math.random() > 0.5 ? 'peach' : 'apricot'; // Đào hoặc Mai
+    let width, height;
+    let particles = [];
+    const PARTICLE_COUNT = 700; // Tăng số lượng hạt lên nhiều
+    let heartScale = 1;
+    let isForming = false;
+    let time = 0;
+
+    // Resize và căn chỉnh tỷ lệ tim
+    function resize() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+        // Tự động tính toán scale để tim không quá to (che chữ) hoặc quá nhỏ
+        heartScale = Math.min(width, height) / 40; 
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    // --- CÔNG THỨC TIM ---
+    function getHeartPosition(t) {
+        const x = 16 * Math.pow(Math.sin(t), 3);
+        const y = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2*Math.cos(3*t) - Math.cos(4*t));
+        return {x, y};
     }
 
-    update() {
-        this.y += this.speed;
-        this.x += Math.sin(this.y * 0.01); // Lắc lư
-        this.angle += this.spin;
+    // --- CLASS PARTICLE ---
+    class Particle {
+        constructor() {
+            this.reset(true); // true = random vị trí ban đầu
+        }
 
-        if (this.y > height) {
-            this.reset();
+        reset(randomStart = false) {
+            if (randomStart) {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+            } else {
+                // Nếu reset khi đang chạy, cho nó xuất phát từ tâm để nổ ra
+                this.x = width / 2;
+                this.y = height / 2;
+            }
+            
+            this.vx = (Math.random() - 0.5) * 2;
+            this.vy = (Math.random() - 0.5) * 2;
+            this.size = Math.random() * 2 + 1;
+            
+            // Màu sắc: Đỏ đậm, đỏ tươi, hồng, vàng cam
+            const colors = ['#ff0000', '#ff4d4d', '#ff99cc', '#ffd700', '#ffffff'];
+            this.color = colors[Math.floor(Math.random() * colors.length)];
+            
+            // Vị trí mục tiêu trên hình trái tim
+            this.t = Math.random() * Math.PI * 2;
+            const pos = getHeartPosition(this.t);
+            
+            // Random độ dày của viền tim (để tim trông dày hơn)
+            const thickness = Math.random() * 0.5 + 0.8; 
+            
+            this.baseX = pos.x * heartScale * thickness;
+            this.baseY = pos.y * heartScale * thickness;
+            
+            // Tốc độ di chuyển về tim
+            this.friction = Math.random() * 0.05 + 0.02;
+        }
+
+        update(beatScale) {
+            if (isForming) {
+                // Tọa độ mục tiêu (có tính thêm nhịp đập beatScale)
+                // Dịch Y lên một chút (-heartScale * 1.5) để tim nằm chính giữa màn hình hơn
+                let targetX = (width / 2) + this.baseX * beatScale;
+                let targetY = (height / 2) + this.baseY * beatScale - (heartScale * 1.5);
+
+                // Di chuyển hạt về mục tiêu
+                this.x += (targetX - this.x) * this.friction;
+                this.y += (targetY - this.y) * this.friction;
+            } else {
+                // Bay lung tung khi chưa bấm nút
+                this.x += this.vx;
+                this.y += this.vy;
+                
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+            }
+        }
+
+        draw() {
+            ctx.fillStyle = this.color;
+            ctx.beginPath();
+            // Vẽ hình tim nhỏ xíu
+            ctx.moveTo(this.x, this.y);
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI*2);
+            ctx.fill();
         }
     }
 
-    draw() {
-        ctx.save();
-        ctx.translate(this.x, this.y);
-        ctx.rotate(this.angle);
-        
-        if (this.type === 'peach') {
-            ctx.fillStyle = "#ffb7b2"; // Hồng phấn
-        } else {
-            ctx.fillStyle = "#ffeb3b"; // Vàng mai
-        }
-        
-        // Vẽ cánh hoa đơn giản (hình elip)
-        ctx.beginPath();
-        ctx.ellipse(0, 0, this.size, this.size / 2, 0, 0, Math.PI * 2);
-        ctx.fill();
-        
-        ctx.restore();
-    }
-}
-
-// --- KHỞI TẠO ---
-function init() {
-    for (let i = 0; i < PARTICLE_COUNT; i++) {
+    // --- KHỞI TẠO ---
+    for(let i=0; i<PARTICLE_COUNT; i++){
         particles.push(new Particle());
     }
-    for (let i = 0; i < FLOWER_COUNT; i++) {
-        flowers.push(new Flower());
+
+    // --- LOOP ANIMATION ---
+    function animate() {
+        // Tạo hiệu ứng vệt mờ (trail effect) cho đẹp
+        ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+        ctx.fillRect(0, 0, width, height);
+
+        // Tạo nhịp tim đập (Beat)
+        // Dùng hàm sin theo thời gian để tạo dao động scale từ 1.0 đến 1.15
+        time += 0.03;
+        let beat = 1 + Math.sin(time) * 0.05; 
+        // Làm nhịp đập giật cục giống tim thật hơn:
+        if (Math.sin(time) > 0.8) beat = 1.1; 
+
+        particles.forEach(p => {
+            p.update(beat);
+            p.draw();
+        });
+
+        requestAnimationFrame(animate);
     }
-}
+    animate();
 
-// --- VÒNG LẶP ANIMATION ---
-function animate() {
-    ctx.clearRect(0, 0, width, height); // Xóa màn hình cũ
+    // --- SỰ KIỆN CLICK ---
+    function initShow() {
+        document.getElementById("startBtn").style.display = "none";
+        isForming = true; // Bắt đầu xếp hình
 
-    // 1. Vẽ hoa rơi (nền)
-    flowers.forEach(flower => {
-        flower.update();
-        flower.draw();
-    });
+        // Tăng tốc độ bay về
+        particles.forEach(p => p.friction = 0.08);
 
-    // 2. Vẽ các hạt tim
-    particles.forEach(p => {
-        p.update();
-        p.draw();
-    });
-
-    requestAnimationFrame(animate);
-}
-
-// --- XỬ LÝ SỰ KIỆN ---
-function startShow() {
-    // 1. Ẩn nút
-    document.getElementById('startBtn').style.display = 'none';
-    
-    // 2. Kích hoạt chế độ xếp hình tim
-    isHeartFormed = true;
-    particles.forEach(p => p.setHeartTarget());
-
-    // 3. Hiển thị text sau 1.5 giây (đợi tim xếp xong)
-    setTimeout(() => {
-        document.getElementById('msgBox').classList.add('visible');
-        document.getElementById('coupLeft').classList.add('visible');
+        // Hiển thị nội dung sau 1 giây
         setTimeout(() => {
-            document.getElementById('coupRight').classList.add('visible');
-        }, 800); // Câu đối phải hiện sau câu đối trái 1 xíu
-    }, 1500);
-}
+            document.getElementById("centerMsg").classList.add("visible");
+        }, 1200);
 
-// Chạy thôi
-init();
-animate();
-
+        // Hiển thị câu đối sau 1.5 giây
+        setTimeout(() => {
+            document.getElementById("scrollLeft").classList.add("visible");
+            setTimeout(() => {
+                document.getElementById("scrollRight").classList.add("visible");
+            }, 600);
+        }, 1800);
+    }
 </script>
 </body>
 </html>
