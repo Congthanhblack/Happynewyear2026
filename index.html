@@ -15,6 +15,12 @@ body{
     overflow:hidden;
 }
 
+/* Nội dung nằm trên */
+h1, .btn, .text{
+    position:relative;
+    z-index:2;
+}
+
 h1{
     margin-top:30px;
 }
@@ -29,10 +35,12 @@ h1{
     cursor:pointer;
 }
 
+/* Canvas nằm dưới */
 canvas{
     position:fixed;
     top:0;
     left:0;
+    z-index:0;
 }
 
 .text{
@@ -59,12 +67,17 @@ canvas{
 <script>
 let c=document.getElementById("canvas");
 let ctx=c.getContext("2d");
-c.width=window.innerWidth;
-c.height=window.innerHeight;
+
+function resize(){
+    c.width=window.innerWidth;
+    c.height=window.innerHeight;
+}
+resize();
+window.onresize=resize;
 
 let particles=[];
 
-/* Tạo điểm hình trái tim */
+/* Hình trái tim */
 function heartShape(t){
     let x=16*Math.pow(Math.sin(t),3);
     let y=-(13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t));
@@ -73,7 +86,7 @@ function heartShape(t){
 
 function fireHeart(){
     particles=[];
-    for(let i=0;i<200;i++){
+    for(let i=0;i<250;i++){
         let t=Math.random()*Math.PI*2;
         let p=heartShape(t);
 
@@ -81,19 +94,18 @@ function fireHeart(){
             x:c.width/2,
             y:c.height/2,
             tx:c.width/2+p.x*15,
-            ty:c.height/2+p.y*15,
-            life:80
+            ty:c.height/2+p.y*15
         });
     }
 }
 
 function draw(){
-    ctx.fillStyle="rgba(0,0,0,0.2)";
+    ctx.fillStyle="rgba(0,0,0,0.25)";
     ctx.fillRect(0,0,c.width,c.height);
 
     particles.forEach(p=>{
-        p.x+=(p.tx-p.x)*0.08;
-        p.y+=(p.ty-p.y)*0.08;
+        p.x+=(p.tx-p.x)*0.06;
+        p.y+=(p.ty-p.y)*0.06;
 
         ctx.fillStyle="pink";
         ctx.beginPath();
@@ -103,12 +115,10 @@ function draw(){
 
     requestAnimationFrame(draw);
 }
-
 draw();
 
 function start(){
     fireHeart();
-
     setTimeout(()=>{
         document.getElementById("loveText").style.display="block";
     },1500);
