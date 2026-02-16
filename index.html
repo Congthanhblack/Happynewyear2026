@@ -1,304 +1,174 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gửi Bé Chinh 💝 Tết Bình An</title>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Great+Vibes&family=Quicksand:wght@500&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        :root {
-            --gold: #ffd700;
-            --red: #d40000;
-            --pink: #ff3385;
-            --yellow: #ffeb3b;
-        }
+<title>Tết Yêu Thương</title>
 
-        body, html {
-            margin: 0; padding: 0; background: #050000; overflow: hidden;
-            font-family: 'Dancing Script', cursive;
-            user-select: none;
-        }
+<style>
+body{
+    margin:0;
+    overflow:hidden;
+    background:black;
+    font-family: 'Segoe UI', sans-serif;
+}
 
-        canvas { position: fixed; inset: 0; z-index: 1; }
+/* Canvas */
+canvas{
+    position:fixed;
+    top:0;
+    left:0;
+}
 
-        /* Nút bắt đầu */
-        #startBtn {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            z-index: 100; padding: 18px 40px; font-size: 24px;
-            border-radius: 50px; border: 2px solid var(--gold); cursor: pointer;
-            color: white; background: linear-gradient(45deg, #d40000, #ff4d4d);
-            box-shadow: 0 0 30px rgba(212, 0, 0, 0.6);
-            transition: 0.3s; font-family: 'Quicksand', sans-serif;
-        }
-        #startBtn:hover { transform: translate(-50%, -50%) scale(1.1); background: #ff0000; }
+/* Text giữa màn hình */
+#text{
+    position:absolute;
+    width:100%;
+    text-align:center;
+    top:40%;
+    font-size:42px;
+    color:white;
+    text-shadow:0 0 20px #ff4da6;
+    opacity:0;
+    transition:2s;
+}
 
-        /* Trung tâm lời chúc */
-        #center {
-            position: fixed; top: 45%; left: 50%; transform: translate(-50%, -50%);
-            text-align: center; z-index: 5; opacity: 0; transition: 3s; width: 90%;
-            pointer-events: none;
-        }
-        .name {
-            font-family: 'Great Vibes', cursive;
-            font-size: clamp(45px, 10vw, 100px);
-            color: var(--yellow);
-            text-shadow: 0 0 20px #ff3385, 0 0 40px red;
-            margin-bottom: 10px;
-        }
-        .wish-container { height: 50px; display: flex; justify-content: center; align-items: center; }
-        .wish {
-            color: white; font-size: 24px; font-family: 'Quicksand', sans-serif;
-            text-shadow: 0 0 10px rgba(255,255,255,0.5);
-            position: absolute; opacity: 0; transition: 1s;
-        }
-        .wish.active-text { opacity: 1; transform: translateY(-5px); }
+/* Glow */
+.glow{
+    animation:glow 2s infinite alternate;
+}
 
-        /* Câu đối */
-        .couplet {
-            position: fixed; top: 50%; transform: translateY(-50%);
-            background: var(--red); border: 2px solid var(--gold);
-            padding: 25px 12px; border-radius: 5px; opacity: 0; transition: 2.5s; z-index: 6;
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
-        }
-        .left { left: 15px; } .right { right: 15px; }
-        .couplet span {
-            writing-mode: vertical-rl; text-orientation: upright;
-            color: var(--gold); font-size: clamp(16px, 4vw, 22px); font-weight: bold; letter-spacing: 5px;
-        }
-        .active { opacity: 1 !important; }
-
-        /* Cơn mưa Lì xì */
-        #lixi-container { position: fixed; inset: 0; z-index: 99; pointer-events: none; }
-        .lixi-item {
-            position: absolute; width: 60px; height: 90px;
-            background: #d40000; border: 2px solid var(--gold);
-            border-radius: 8px; cursor: pointer; pointer-events: auto;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            animation: fall linear forwards;
-        }
-        .lixi-item span { color: var(--gold); font-weight: bold; font-size: 24px; }
-        @keyframes fall {
-            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(110vh) rotate(360deg); opacity: 0.8; }
-        }
-
-        /* Popup phần thưởng */
-        #reward-popup {
-            position: fixed; top: 50%; left: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            background: rgba(255, 255, 255, 0.95);
-            padding: 30px; border-radius: 20px; text-align: center;
-            z-index: 2000; border: 5px solid #d40000;
-            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            color: #d40000; min-width: 280px; box-shadow: 0 0 50px rgba(0,0,0,0.5);
-        }
-        #reward-popup.show { transform: translate(-50%, -50%) scale(1); }
-        #reward-popup h2 { margin: 0; font-family: 'Quicksand'; font-size: 24px; }
-        #reward-popup p { font-size: 20px; font-weight: bold; margin: 15px 0; color: #333; }
-        #reward-popup button {
-            padding: 10px 25px; border-radius: 20px; border: none;
-            background: #d40000; color: white; cursor: pointer; font-weight: bold;
-        }
-    </style>
+@keyframes glow{
+    from{ text-shadow:0 0 10px #ff4da6;}
+    to{ text-shadow:0 0 40px #ff99cc;}
+}
+</style>
 </head>
+
 <body>
 
-<button id="startBtn">🧧 Mở Quà Tết Cho Bé Chinh 🧧</button>
 <canvas id="c"></canvas>
-
-<div id="center">
-    <div class="name">Chúc Mừng Năm Mới</div>
-    <div class="wish-container" id="wishBox"></div>
-</div>
-
-<div class="couplet left"><span>VẠN XUÂN NHƯ Ý</span></div>
-<div class="couplet right"><span>MÃI YÊU BÉ CHINH</span></div>
-
-<div id="lixi-container"></div>
-
-<div id="reward-popup">
-    <h2>🧧 Lì Xì Yêu Thương 🧧</h2>
-    <p id="reward-text"></p>
-    <button onclick="closePopup()">Nhận Lấy ❤️</button>
-</div>
+<div id="text"></div>
 
 <script>
-    const c = document.getElementById("c");
-    const ctx = c.getContext("2d");
-    const btn = document.getElementById("startBtn");
-    
-    const wishes = [
-        "Chúc Chinh luôn xinh đẹp rạng ngời ✨",
-        "Năm mới thật nhiều niềm vui nhé ❤️",
-        "Mọi dự định của em đều thành công 🧧",
-        "Cảm ơn em đã ở bên anh!",
-        "Tết này và nhiều Tết nữa vẫn có nhau 👩‍❤️‍👨",
-        "Ăn thật nhiều mà không béo nha 🌸"
-    ];
+const canvas = document.getElementById("c");
+const ctx = canvas.getContext("2d");
 
-    const lixiMessages = [
-        "🧧 1,000,000 cái thơm má",
-        "🧧 Một chầu trà sữa full topping",
-        "🧧 Thẻ 'Miễn tử' khi làm nũng",
-        "🧧 Một chuyến du lịch cùng anh",
-        "🧧 Voucher 'Anh làm việc nhà' 1 tuần",
-        "🧧 Một buổi tối xem phim lãng mạn",
-        "🧧 Chinh là công chúa của anh ❤️",
-        "🧧 Một món quà bất ngờ vào tối nay"
-    ];
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
-    let W, H, dpr = window.devicePixelRatio || 1;
-    let hearts = [], flowers = [];
-    let forming = false;
-    let pulse = 1, t = 0;
+let W = canvas.width;
+let H = canvas.height;
 
-    function resize() {
-        W = window.innerWidth; H = window.innerHeight;
-        c.width = W * dpr; c.height = H * dpr;
-        ctx.scale(dpr, dpr);
+/* ---------------- HOA ĐÀO RƠI ---------------- */
+let petals = [];
+
+for(let i=0;i<40;i++){
+    petals.push({
+        x:Math.random()*W,
+        y:Math.random()*H,
+        r:Math.random()*4+2,
+        s:Math.random()*1+0.5
+    });
+}
+
+/* ---------------- TIM BAY ---------------- */
+let hearts=[];
+
+function drawHeart(x,y,size){
+    ctx.fillStyle="pink";
+    ctx.beginPath();
+    ctx.moveTo(x,y);
+    ctx.bezierCurveTo(x,y-size,x-size,y-size,x-size,y);
+    ctx.bezierCurveTo(x-size,y+size,x,y+size*1.3,x,y+size*2);
+    ctx.bezierCurveTo(x,y+size*1.3,x+size,y+size,x+size,y);
+    ctx.bezierCurveTo(x+size,y-size,x,y-size,x,y);
+    ctx.fill();
+}
+
+/* Tạo tim bay */
+setInterval(()=>{
+    hearts.push({
+        x:Math.random()*W,
+        y:H+20,
+        s:Math.random()*15+5,
+        v:Math.random()*1+0.5
+    });
+},300);
+
+/* ---------------- GHÉP TIM LỚN ---------------- */
+let bigHeartPoints=[];
+let forming=false;
+
+function createBigHeart(){
+    bigHeartPoints=[];
+    for(let t=0;t<Math.PI*2;t+=0.05){
+        let x=16*Math.pow(Math.sin(t),3);
+        let y=-(13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t));
+        bigHeartPoints.push({
+            x:W/2+x*15,
+            y:H/2+y*15
+        });
     }
-    resize();
-    window.addEventListener("resize", resize);
+}
 
-    // Hình học trái tim
-    function heartPoint(t) {
-        return {
-            x: 16 * Math.pow(Math.sin(t), 3),
-            y: -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t))
-        };
-    }
+/* ---------------- TEXT CẢNH ---------------- */
+const text = document.getElementById("text");
 
-    class Particle {
-        constructor() { this.reset(); this.y = Math.random() * H; }
-        reset() {
-            this.x = Math.random() * W; this.y = -20;
-            this.tx = 0; this.ty = 0;
-            this.s = Math.random() * 2 + 1;
-            this.sp = 0.02 + Math.random() * 0.04;
-            this.c = `hsl(${Math.random() * 20 + 350}, 100%, 70%)`;
-        }
-        move() {
-            if (forming) {
-                this.x += (this.tx - this.x) * this.sp;
-                this.y += (this.ty - this.y) * this.sp;
-            } else {
-                this.y += this.s * 0.5;
-                this.x += Math.sin(this.y * 0.01);
-                if (this.y > H) this.reset();
-            }
-        }
-        draw() {
-            ctx.fillStyle = this.c;
-            ctx.beginPath(); ctx.arc(this.x, this.y, this.s, 0, 7); ctx.fill();
-        }
-    }
+function showText(msg){
+    text.innerHTML=msg;
+    text.style.opacity=1;
+    text.classList.add("glow");
+}
 
-    class Flower {
-        constructor() { this.reset(); }
-        reset() {
-            this.x = Math.random() * W; this.y = Math.random() * -H;
-            this.size = Math.random() * 4 + 4;
-            this.speed = Math.random() * 1 + 0.5;
-            this.angle = Math.random() * Math.PI * 2;
-        }
-        update() {
-            this.y += this.speed;
-            this.x += Math.sin(this.angle) * 0.5;
-            this.angle += 0.01;
-            if (this.y > H) this.reset();
-        }
-        draw() {
-            ctx.fillStyle = "#ffeb3b"; // Màu hoa mai
-            ctx.beginPath();
-            for(let i=0; i<5; i++) {
-                let deg = (i*72) * Math.PI/180;
-                ctx.lineTo(this.x + Math.cos(deg)*this.size, this.y + Math.sin(deg)*this.size);
-            }
-            ctx.fill();
-        }
-    }
+setTimeout(()=>showText("Chúc bé Chinh năm mới an lành ❤️"),2000);
+setTimeout(()=>showText("Luôn vui vẻ và hạnh phúc"),6000);
+setTimeout(()=>showText("Và luôn có anh bên cạnh"),10000);
 
-    // Khởi tạo hạt
-    for (let i = 0; i < 600; i++) hearts.push(new Particle());
-    for (let i = 0; i < 40; i++) flowers.push(new Flower());
+setTimeout(()=>{
+    text.style.opacity=0;
+    forming=true;
+    createBigHeart();
+},14000);
 
-    function setTargets() {
-        hearts.forEach(p => {
-            let tt = Math.random() * Math.PI * 2;
-            let h = heartPoint(tt);
-            let scale = Math.min(W, H) / 38;
-            p.tx = W / 2 + h.x * scale * pulse;
-            p.ty = H / 2 + h.y * scale * pulse;
+setTimeout(()=>{
+    showText("Anh yêu em Chinh");
+},20000);
+
+/* ---------------- ANIMATE ---------------- */
+function animate(){
+    ctx.fillStyle="rgba(0,0,0,0.2)";
+    ctx.fillRect(0,0,W,H);
+
+    /* Hoa đào */
+    ctx.fillStyle="#ffb7c5";
+    petals.forEach(p=>{
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        ctx.fill();
+        p.y+=p.s;
+        if(p.y>H) p.y=0;
+    });
+
+    /* Tim bay */
+    hearts.forEach(h=>{
+        drawHeart(h.x,h.y,h.s);
+        h.y-=h.v;
+    });
+
+    /* Tim lớn */
+    if(forming){
+        bigHeartPoints.forEach(p=>{
+            drawHeart(p.x,p.y,4);
         });
     }
 
-    function loop() {
-        ctx.fillStyle = "rgba(5, 0, 0, 0.25)";
-        ctx.fillRect(0, 0, W, H);
-        flowers.forEach(f => { f.update(); f.draw(); });
-        if (forming) {
-            t += 0.05;
-            pulse = 1 + Math.sin(t) * 0.06;
-            setTargets();
-        }
-        hearts.forEach(p => { p.move(); p.draw(); });
-        requestAnimationFrame(loop);
-    }
-    loop();
+    requestAnimationFrame(animate);
+}
 
-    // Logic xử lý nội dung
-    function startWishes() {
-        const box = document.getElementById("wishBox");
-        let index = 0;
-        setInterval(() => {
-            box.innerHTML = `<div class="wish active-text">${wishes[index]}</div>`;
-            index = (index + 1) % wishes.length;
-        }, 3000);
-    }
-
-    function createLixi() {
-        const container = document.getElementById('lixi-container');
-        const lixi = document.createElement('div');
-        lixi.className = 'lixi-item';
-        lixi.style.left = Math.random() * 85 + 5 + '%';
-        const duration = Math.random() * 3 + 4;
-        lixi.style.animationDuration = duration + 's';
-        lixi.innerHTML = `<span>福</span>`;
-        
-        const msg = lixiMessages[Math.floor(Math.random() * lixiMessages.length)];
-        lixi.onclick = () => {
-            document.getElementById('reward-text').innerText = msg;
-            document.getElementById('reward-popup').classList.add('show');
-            lixi.remove();
-        };
-        container.appendChild(lixi);
-        setTimeout(() => lixi.remove(), duration * 1000);
-    }
-
-    function closePopup() {
-        document.getElementById('reward-popup').classList.remove('show');
-    }
-
-    btn.onclick = () => {
-        btn.style.display = "none";
-        forming = true;
-        setTargets();
-        
-        setTimeout(() => {
-            document.getElementById("center").classList.add("active");
-            startWishes();
-        }, 1500);
-
-        setTimeout(() => {
-            document.querySelectorAll(".couplet").forEach(el => el.classList.add("active"));
-        }, 2500);
-
-        setTimeout(() => {
-            setInterval(createLixi, 1800);
-        }, 6000);
-    }
+animate();
 </script>
+
 </body>
 </html>
